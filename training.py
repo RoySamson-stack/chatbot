@@ -4,8 +4,9 @@ import pickle
 import numpy as np
 import tensorflow as tf
 
-import nltk
+import nltk 
 from nltk.stem import WordNetLemmatizer
+# from tensorflow.keras import layers, models , optimizers, 
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Activation, Dropout
 from tensorflow.keras.optimizers import SGD
@@ -55,12 +56,10 @@ for document in documents:
     training_x.append(bag)
     training_y.append(output_row)
 
-# Shuffle the data
 combined_data = list(zip(training_x, training_y))
 random.shuffle(combined_data)
 training_x[:], training_y[:] = zip(*combined_data)
 
-# Convert to NumPy arrays
 train_x = np.array(training_x)
 train_y = np.array(training_y)
 
@@ -71,9 +70,9 @@ model.add(Dense(64, activation="relu"))
 model.add(Dropout(0.5))
 model.add(Dense(len(train_y[0]), activation="softmax"))
 
-# Use the legacy optimizer
-sgd = tf.keras.optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+sgd = tf.keras.optimizers.legacy.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
+
 
 model.fit(train_x, train_y, epochs=200, batch_size=5, verbose=1)
 model.save('chatbot_model.model')
