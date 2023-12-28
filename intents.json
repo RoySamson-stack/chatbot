@@ -2,48 +2,134 @@
     "intents": [
         {
             "tag": "greetings",
-            "patterns": ["Hello", "Hey", "Hi", "Good day"],
-            "responses": ["Hello", "Hey", "What can I do for you"]
+            "patterns": [
+                "Hello",
+                "Hey",
+                "Hi",
+                "Good day"
+            ],
+            "responses": [
+                "Hello",
+                "Hey",
+                "What can I do for you"
+            ]
         },
         {
             "tag": "goodbye",
-            "patterns": ["Goodbye", "Bye", "See you later", "Farewell"],
-            "responses": ["Goodbye!", "Take care", "See you soon"]
+            "patterns": [
+                "Goodbye",
+                "Bye",
+                "See you later",
+                "Farewell"
+            ],
+            "responses": [
+                "Goodbye!",
+                "Take care",
+                "See you soon"
+            ]
         },
         {
             "tag": "age",
-            "patterns": ["How old are you?", "What's your age?"],
-            "responses": ["I don't have an age. I'm just a computer program.", "I'm ageless!"]
+            "patterns": [
+                "How old are you?",
+                "What's your age?"
+            ],
+            "responses": [
+                "I don't have an age. I'm just a computer program.",
+                "I'm ageless!"
+            ]
         },
         {
             "tag": "name",
-            "patterns": ["What's your name?", "Do you have a name?"],
-            "responses": ["I'm a chatbot and don't have a personal name. You can call me ChatBot."]
+            "patterns": [
+                "What's your name?",
+                "Do you have a name?"
+            ],
+            "responses": [
+                "I'm a chatbot and don't have a personal name. You can call me ChatBot."
+            ]
         },
         {
             "tag": "weather",
-            "patterns": ["How's the weather today?", "Tell me the weather forecast", "Weather"],
-            "responses": ["I'm sorry, I don't have real-time weather information. You can check a weather website or app."]
+            "patterns": [
+                "How's the weather today?",
+                "Tell me the weather forecast",
+                "Weather"
+            ],
+            "responses": [
+                "I'm sorry, I don't have real-time weather information. You can check a weather website or app."
+            ]
         },
         {
             "tag": "thankful",
-            "patterns": ["Thank you", "Thanks", "Appreciate it"],
-            "responses": ["You're welcome!", "Anytime", "Glad I could help"]
+            "patterns": [
+                "Thank you",
+                "Thanks",
+                "Appreciate it"
+            ],
+            "responses": [
+                "You're welcome!",
+                "Anytime",
+                "Glad I could help"
+            ]
         },
         {
             "tag": "unknown",
-            "patterns": ["I don't know", "Not sure", "I have no idea"],
-            "responses": ["That's okay. If you have any questions, feel free to ask."]
+            "patterns": [
+                "I don't know",
+                "Not sure",
+                "I have no idea"
+            ],
+            "responses": [
+                "That's okay. If you have any questions, feel free to ask."
+            ]
         },
         {
             "tag": "insult",
-            "patterns": ["You're stupid", "You're dumb", "I hate you"],
-            "responses": ["I'm here to assist you. If there's an issue, let's try to resolve it together."]
+            "patterns": [
+                "You're stupid",
+                "You're dumb",
+                "I hate you"
+            ],
+            "responses": [
+                "I'm here to assist you. If there's an issue, let's try to resolve it together."
+            ]
         },
         {
             "tag": "joke",
-            "patterns": ["Tell me a joke", "Do you know any jokes?", "Joke"],
-            "responses": ["Why don't scientists trust atoms? Because they make up everything!"]
+            "patterns": [
+                "Tell me a joke",
+                "Do you know any jokes?",
+                "Joke"
+            ],
+            "responses": [
+                "Why don't scientists trust atoms? Because they make up everything!"
+            ]
+        },
+        {
+            "tag": "new_intent",
+            "patterns": [],
+            "responses": []
+        },
+        {
+            "tag": "new_intent",
+            "patterns": [],
+            "responses": []
+        },
+        {
+            "tag": "new_intent",
+            "patterns": [],
+            "responses": []
+        },
+        {
+            "tag": "new_intent",
+            "patterns": [],
+            "responses": []
+        },
+        {
+            "tag": "new_intent",
+            "patterns": [],
+            "responses": []
         }
     ]
 }

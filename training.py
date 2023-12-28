@@ -2,26 +2,50 @@ import random
 import json
 import pickle
 import numpy as np
-import tensorflow as tf
-
-import nltk 
+import requests
+from bs4 import BeautifulSoup
+import nltk
 from nltk.stem import WordNetLemmatizer
-# from tensorflow.keras import layers, models , optimizers, 
+from nltk.tokenize import word_tokenize
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Activation, Dropout
 from tensorflow.keras.optimizers import SGD
-from nltk.tokenize import word_tokenize
+import tensorflow as tf
 
-lemmatizer = WordNetLemmatizer()
 nltk.download('punkt')
 nltk.download('wordnet')
 
-intents = json.loads(open('intents.json').read())
+intents_file = 'intents.json'
+intents = json.loads(open(intents_file).read())
+
+def scrape_website(url):
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    
+    patterns = [element.text for element in soup.select('.pattern-class')]
+    responses = [element.text for element in soup.select('.response-class')]
+    
+    return {'patterns': patterns, 'responses': responses}
+
+website_url = 'https://en.wikipedia.org/wiki/Category:English_phrases'
+scraped_data = scrape_website(website_url)
+
+new_intent = {
+    "tag": "new_intent",
+    "patterns": scraped_data['patterns'],
+    "responses": scraped_data['responses']
+}
+
+intents['intents'].append(new_intent)
+
+with open(intents_file, 'w') as json_file:
+    json.dump(intents, json_file, indent=4)
+
+lemmatizer = WordNetLemmatizer()
 
 words = []
 classes = []
 documents = []
-ignore_letters = ['?', "!", ".", ","]
 
 for intent in intents['intents']:
     for pattern in intent['patterns']:
@@ -31,13 +55,7 @@ for intent in intents['intents']:
         if intent['tag'] not in classes:
             classes.append(intent['tag'])
 
-words = [lemmatizer.lemmatize(word) for word in words if word not in ignore_letters]
-words = sorted(set(words))
-
-classes = sorted(set(classes))
-
-pickle.dump(words, open('words.pkl', 'wb'))
-pickle.dump(classes, open('classes.pkl', 'wb'))
+words = [lemmatizer.lemmatize(word) for word in words]
 
 training_x = []
 training_y = []
@@ -73,7 +91,8 @@ model.add(Dense(len(train_y[0]), activation="softmax"))
 sgd = tf.keras.optimizers.legacy.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
 
-
 hist = model.fit(train_x, train_y, epochs=200, batch_size=5, verbose=1)
-model.save('chatbotmodel.h5', hist)
+
+model.save('chatbot_model.h5', hist)
+
 print("Done")
