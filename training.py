@@ -74,6 +74,6 @@ sgd = tf.keras.optimizers.legacy.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov
 model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
 
 
-model.fit(train_x, train_y, epochs=200, batch_size=5, verbose=1)
-model.save('chatbot_model.model')
+hist = model.fit(train_x, train_y, epochs=200, batch_size=5, verbose=1)
+model.save('chatbotmodel.h5', hist)
 print("Done")
