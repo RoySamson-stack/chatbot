@@ -12,8 +12,9 @@ from tensorflow.keras.optimizers import SGD
 from nltk.tokenize import word_tokenize
 
 
-lemmatizer = WordNetLemmatizer
+lemmatizer = WordNetLemmatizer()
 nltk.download('punkt')
+nltk.download('wordnet')
 intents = json.loads(open('intents.json').read())
 
 words =[]
@@ -24,14 +25,14 @@ ignore_letters = ['?', "!", ".", ","]
 for intent in intents['intents']:
     for pattern in intent['patterns']:
         word_list = word_tokenize(pattern)
-        words.append(word_list)
+        words.extend(word_list)
         documents.append((word_list, intent['tag']))
         if intent['tag'] not in classes:
             classes.append(intent['tag'])
 
 
 
-print(documents)            
+words = [lemmatizer.lemmatize(word) for word in words if word not in ignore_letters]
+words = sorted(set(words))
 
-
-
+print(words)
