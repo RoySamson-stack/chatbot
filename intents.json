@@ -5,8 +5,7 @@
             "patterns": [
                 "Hello",
                 "Hey",
-                "Hi",
-                "Good day"
+                "Hi"
             ],
             "responses": [
                 "Hello",
@@ -105,6 +104,16 @@
             "responses": [
                 "Why don't scientists trust atoms? Because they make up everything!"
             ]
+        },
+        {
+            "tag": "new_intent",
+            "patterns": [],
+            "responses": []
+        },
+        {
+            "tag": "new_intent",
+            "patterns": [],
+            "responses": []
         },
         {
             "tag": "new_intent",

@@ -5,6 +5,8 @@ import numpy as np
 import requests
 from bs4 import BeautifulSoup
 import nltk
+from nltk.corpus import stopwords
+
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
 from tensorflow.keras.models import Sequential
@@ -18,14 +20,30 @@ nltk.download('wordnet')
 intents_file = 'intents.json'
 intents = json.loads(open(intents_file).read())
 
+
+stop_words = set(stopwords.words('english'))
+
+def preprocess_and_tokenize(text):
+    text = text.lower()
+    text = re.sub(r'[^a-zA-Z\s]', '', text)
+    tokens = word_tokenize(text)
+    tokens = [word for word in tokens if word not in stop_words]
+    return ' '.join(tokens)
+
 def scrape_website(url):
-    response = requests.get(url)
-    soup = BeautifulSoup(response.text, 'html.parser')
-    
-    patterns = [element.text for element in soup.select('.pattern-class')]
-    responses = [element.text for element in soup.select('.response-class')]
-    
-    return {'patterns': patterns, 'responses': responses}
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, 'html.parser')
+        
+        patterns = [element.text for element in soup.select('.pattern-class')]
+        responses = [element.text for element in soup.select('.response-class')]
+        
+        return {'patterns': patterns, 'responses': responses}
+    except Exception as e:
+        print(f"Error during scraping: {e}")
+        return {'patterns': [], 'responses': []}
+
 
 website_url = 'https://en.wikipedia.org/wiki/Category:English_phrases'
 scraped_data = scrape_website(website_url)
@@ -47,13 +65,24 @@ words = []
 classes = []
 documents = []
 
+# for intent in intents['intents']:
+#     for pattern in intent['patterns']:
+#         word_list = word_tokenize(pattern)
+#         words.extend(word_list)
+#         documents.append((word_list, intent['tag']))
+#         if intent['tag'] not in classes:
+#             classes.append(intent['tag'])
+
 for intent in intents['intents']:
     for pattern in intent['patterns']:
-        word_list = word_tokenize(pattern)
+        cleaned_pattern = preprocess_and_tokenize(pattern)
+        word_list = word_tokenize(cleaned_pattern)
+
         words.extend(word_list)
         documents.append((word_list, intent['tag']))
         if intent['tag'] not in classes:
             classes.append(intent['tag'])
+
 
 words = [lemmatizer.lemmatize(word) for word in words]
 
@@ -82,16 +111,19 @@ train_x = np.array(training_x)
 train_y = np.array(training_y)
 
 model = Sequential()
-model.add(Dense(128, input_shape=(len(train_x[0]),), activation="relu"))
+model.add(Dense(256, input_shape=(len(train_x[0]),), activation="relu"))
+model.add(Dropout(0.5))
+model.add(Dense(128, activation="relu"))
 model.add(Dropout(0.5))
 model.add(Dense(64, activation="relu"))
 model.add(Dropout(0.5))
 model.add(Dense(len(train_y[0]), activation="softmax"))
 
+optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
 sgd = tf.keras.optimizers.legacy.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
 
-hist = model.fit(train_x, train_y, epochs=200, batch_size=5, verbose=1)
+hist = model.fit(train_x, train_y, epochs=300, batch_size=8, verbose=1)
 
 model.save('chatbot_model.h5', hist)
 
